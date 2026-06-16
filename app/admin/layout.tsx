@@ -14,7 +14,7 @@ import {
   User,
   MessageSquare
 } from 'lucide-react';
-import { createClient } from '@/lib/supabase';
+import { getAdminSession, logoutAdmin } from '@/app/actions/auth';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, color: 'text-blue-500', activeBg: 'bg-blue-500' },
@@ -31,15 +31,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const checkAuth = async () => {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const session = await getAdminSession();
       
       if (!session) {
         router.push('/admin/login');
         return;
       }
       
-      setUser({ email: session.user.email || '' });
+      setUser({ email: session.email || '' });
       setLoading(false);
     };
 
@@ -53,8 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }, [pathname, router]);
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await logoutAdmin();
     router.push('/admin/login');
   };
 

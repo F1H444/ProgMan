@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, Save, Plus, X, ImageIcon, Search } from 'lucide-react';
-import { createProject, uploadProjectImage, listBuckets } from '@/lib/supabase';
+import { createProjectAction, uploadProjectImageAction } from '@/app/actions/projects';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function NewProjectPage() {
 
     setUploadingHero(true);
     setUploadingHero(true);
-    const { url, error } = await uploadProjectImage(file, 'hero');
+    const { url, error } = await uploadProjectImageAction(file, 'hero');
     if (url) {
       setFormData({ ...formData, image: url });
     } else {
@@ -66,7 +66,7 @@ export default function NewProjectPage() {
 
     setUploadingGallery(true);
     setUploadingGallery(true);
-    const { url, error } = await uploadProjectImage(file, 'gallery');
+    const { url, error } = await uploadProjectImageAction(file, 'gallery');
     if (url) {
       setFormData({ ...formData, long_images: [...formData.long_images, url] });
     } else {
@@ -91,7 +91,7 @@ export default function NewProjectPage() {
     }
 
     setLoading(true);
-    const project = await createProject({
+    const project = await createProjectAction({
       ...formData,
       long_images: formData.long_images.length > 0 ? formData.long_images : null,
       description: formData.description || null,

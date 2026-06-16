@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trash2, MessageSquare, Calendar } from 'lucide-react';
-import { createClient } from '@/lib/supabase';
+import { getReviewsAction, deleteReviewAction } from '@/app/actions/reviews';
 
 interface Review {
   id: number;
@@ -22,16 +22,12 @@ export default function AdminReviewsPage() {
   }, []);
 
   const fetchReviews = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('reviews')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await getReviewsAction();
 
     if (error) {
       console.error('Error fetching reviews:', error);
     } else {
-      setReviews(data || []);
+      setReviews((data || []) as any[]);
     }
     setLoading(false);
   };
@@ -39,14 +35,10 @@ export default function AdminReviewsPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Apakah Anda yakin ingin menghapus ulasan ini?')) return;
 
-    const supabase = createClient();
-    const { error } = await supabase
-      .from('reviews')
-      .delete()
-      .eq('id', id);
+    const { error } = await deleteReviewAction(id);
 
     if (error) {
-      alert('Gagal menghapus ulasan');
+      alert('Gagal menghapus ulasan: ' + error);
     } else {
       setReviews(reviews.filter(r => r.id !== id));
     }

@@ -1,13 +1,11 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { getReviewsAction } from '@/app/actions/reviews';
 import { submitReview } from '@/app/actions/reviews';
-import { X, Send, Plus, Loader2 } from 'lucide-react';
+import { X, Send, Plus, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-
 
 interface Review {
   id?: number;
@@ -21,17 +19,16 @@ export function TestimonialsSection() {
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [activeIndex, setActiveIndex] = useState(0);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const fetchReviews = async () => {
     setIsLoading(true);
-    const supabase = createClient();
-    const { data } = await supabase
-      .from('reviews')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data } = await getReviewsAction();
     
     if (data) {
-      setDynamicReviews(data);
+      setDynamicReviews(data as any[]);
     }
     setIsLoading(false);
   };
@@ -39,6 +36,49 @@ export function TestimonialsSection() {
   useEffect(() => {
     fetchReviews();
   }, []);
+
+  // Auto-slide every 5 seconds
+  const startAutoPlay = useCallback(() => {
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    autoPlayRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % dynamicReviews.length);
+    }, 5000);
+  }, [dynamicReviews.length]);
+
+  useEffect(() => {
+    if (dynamicReviews.length > 0) {
+      startAutoPlay();
+    }
+    return () => {
+      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    };
+  }, [dynamicReviews.length, startAutoPlay]);
+
+  const goTo = (index: number) => {
+    setActiveIndex(index);
+    startAutoPlay(); // Reset timer on manual navigation
+  };
+
+  const goPrev = () => {
+    goTo((activeIndex - 1 + dynamicReviews.length) % dynamicReviews.length);
+  };
+
+  const goNext = () => {
+    goTo((activeIndex + 1) % dynamicReviews.length);
+  };
+
+  // Touch/swipe support
+  const touchStartX = useRef(0);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goNext();
+      else goPrev();
+    }
+  };
 
   const handleSubmit = async (formData: FormData) => {
     setIsSubmitting(true);
@@ -52,6 +92,40 @@ export function TestimonialsSection() {
       setShowModal(false);
       fetchReviews();
     }
+  };
+
+  // Color accents for cards
+  const cardAccents = [
+    'hover:border-green-500/30',
+    'hover:border-purple-500/30',
+    'hover:border-blue-500/30',
+    'hover:border-cyan-500/30',
+    'hover:border-yellow-500/30',
+  ];
+
+  const activeAccentBorders = [
+    'border-green-500/20',
+    'border-purple-500/20',
+    'border-blue-500/20',
+    'border-cyan-500/20',
+    'border-yellow-500/20',
+  ];
+
+  // Calculate visible cards (show 3 at a time on desktop)
+  const getCardStyle = (index: number) => {
+    const total = dynamicReviews.length;
+    if (total === 0) return { position: 0, isActive: false, isVisible: false };
+    
+    // Calculate relative position from active
+    let diff = index - activeIndex;
+    // Wrap around for infinite effect
+    if (diff > total / 2) diff -= total;
+    if (diff < -total / 2) diff += total;
+
+    const isActive = diff === 0;
+    const isVisible = Math.abs(diff) <= 2;
+
+    return { position: diff, isActive, isVisible };
   };
 
   return (
@@ -73,65 +147,120 @@ export function TestimonialsSection() {
           </button>
         </div>
 
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.15
-              }
-            }
-          }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {isLoading ? (
-              [...Array(3)].map((_, i) => (
-                <div key={i} className="h-64 bg-zinc-900 animate-pulse rounded-[2.5rem]" />
-              ))
-            ) : (
-              dynamicReviews.map((review, i) => (
-                <motion.div
-                  key={review.id || i}
-                  variants={{
-                    hidden: { opacity: 0, y: 40, rotateX: 10, rotateY: 10 },
-                    visible: { 
-                      opacity: 1, 
-                      y: 0, 
-                      rotateX: 0, 
-                      rotateY: 0,
-                      transition: {
-                        duration: 1,
-                        ease: [0.16, 1, 0.3, 1]
-                      }
-                    }
-                  }}
-                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                  className={cn(
-                    "p-10 rounded-[2.5rem] bg-zinc-900/60 border flex flex-col justify-between h-full transition-all duration-500 will-change-transform",
-                    [
-                      "border-white/5 hover:border-green-500/30",
-                      "border-white/5 hover:border-purple-500/30",
-                      "border-white/5 hover:border-blue-500/30",
-                      "border-white/5 hover:border-cyan-500/30",
-                      "border-white/5 hover:border-yellow-500/30"
-                    ][i % 5]
-                  )}
-                >
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-8">"{review.text}"</p>
-                  <div>
-                    <h4 className="text-white font-bold text-sm tracking-tight">{review.name}</h4>
-                    <p className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest mt-1">{review.role}</p>
-                  </div>
-                </motion.div>
-              ))
-            )}
-          </AnimatePresence>
-        </motion.div>
+        {/* Carousel */}
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-64 w-80 bg-zinc-900 animate-pulse rounded-[2.5rem] flex-shrink-0" />
+            ))}
+          </div>
+        ) : dynamicReviews.length > 0 ? (
+          <div className="relative">
+            {/* Cards Container */}
+            <div
+              ref={containerRef}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              className="relative h-[340px] md:h-[380px] flex items-center justify-center overflow-hidden"
+            >
+              {dynamicReviews.map((review, index) => {
+                const { position, isActive, isVisible } = getCardStyle(index);
+                if (!isVisible) return null;
+
+                return (
+                  <motion.div
+                    key={review.id || index}
+                    initial={false}
+                    animate={{
+                      x: `${position * 105}%`,
+                      scale: isActive ? 1.08 : 0.85,
+                      opacity: isActive ? 1 : Math.abs(position) === 1 ? 0.5 : 0.2,
+                      zIndex: isActive ? 10 : 5 - Math.abs(position),
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      ease: [0.32, 0.72, 0, 1],
+                    }}
+                    onClick={() => goTo(index)}
+                    className={cn(
+                      "absolute w-[85%] sm:w-[380px] md:w-[420px] p-8 md:p-10 rounded-[2.5rem] bg-white/[0.03] backdrop-blur-xl border flex flex-col justify-between cursor-pointer transition-colors duration-500 shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]",
+                      isActive
+                        ? activeAccentBorders[index % 5]
+                        : "border-white/5",
+                      !isActive && cardAccents[index % 5]
+                    )}
+                    style={{ minHeight: '280px' }}
+                  >
+                    {/* Quote icon */}
+                    <div className="mb-4">
+                      <svg className={cn("w-8 h-8 transition-colors duration-500", isActive ? "text-blue-500/40" : "text-white/5")} viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                      </svg>
+                    </div>
+
+                    <p className={cn(
+                      "text-sm leading-relaxed mb-8 transition-colors duration-500",
+                      isActive ? "text-zinc-300" : "text-zinc-500"
+                    )}>
+                      &ldquo;{review.text}&rdquo;
+                    </p>
+
+                    <div>
+                      <h4 className={cn(
+                        "font-bold text-sm tracking-tight transition-colors duration-500",
+                        isActive ? "text-white" : "text-zinc-400"
+                      )}>
+                        {review.name}
+                      </h4>
+                      <p className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest mt-1">
+                        {review.role}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-center gap-6 mt-10">
+              {/* Prev Button */}
+              <button
+                onClick={goPrev}
+                className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/30 hover:bg-white/10 transition-all"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+
+              {/* Dots */}
+              <div className="flex items-center gap-2">
+                {dynamicReviews.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goTo(index)}
+                    className={cn(
+                      "rounded-full transition-all duration-500",
+                      index === activeIndex
+                        ? "w-8 h-2 bg-blue-500"
+                        : "w-2 h-2 bg-zinc-700 hover:bg-zinc-500"
+                    )}
+                  />
+                ))}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={goNext}
+                className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/30 hover:bg-white/10 transition-all"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center text-zinc-500 py-20">
+            <p className="text-lg">Belum ada ulasan. Jadilah yang pertama!</p>
+          </div>
+        )}
       </div>
 
       {/* Submission Modal */}
@@ -176,8 +305,8 @@ export function TestimonialsSection() {
                   <input 
                     name="role"
                     required
-                    placeholder="Contoh: Peserta UKK RPL"
-                    defaultValue="Peserta UKK RPL"
+                    placeholder="Contoh: Pemilik Bisnis"
+                    defaultValue="Pemilik Bisnis"
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white/30 transition-colors"
                   />
                 </div>

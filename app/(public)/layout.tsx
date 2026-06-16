@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Preloader } from "@/components/ui/Preloader";
 import { BackgroundGeometry } from "@/components/ui/BackgroundGeometry";
 import { DigitalDust } from "@/components/ui/DigitalDust";
+import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 
 export default function PublicLayout({
   children,
@@ -18,6 +19,7 @@ export default function PublicLayout({
       <SmoothScroll>
         <DigitalDust />
         <BackgroundGeometry />
+        <FloatingWhatsApp />
         <CustomCursor />
         <Navbar />
         <main className="min-h-screen relative z-10 flex flex-col">

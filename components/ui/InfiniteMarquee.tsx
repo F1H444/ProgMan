@@ -14,7 +14,7 @@ export function InfiniteMarquee() {
     { text: 'WEB DEVELOPMENT', color: 'text-blue-500' },
     { text: 'APP DESIGN', color: 'text-purple-500' },
     { text: 'TECH SOLUTIONS', color: 'text-cyan-500' },
-    { text: 'UKK & TUGAS', color: 'text-yellow-500' },
+    { text: 'WEBSITE & APLIKASI', color: 'text-yellow-500' },
     { text: 'SECURITY LOGIC', color: 'text-green-500' },
     { text: 'DATABASE ARCH', color: 'text-blue-400' },
     { text: 'UI/UX MASTERY', color: 'text-purple-400' },
@@ -31,7 +31,7 @@ export function InfiniteMarquee() {
   const x = useTransform(baseX, (v) => `${wrap(-20, -45, v)}%`);
 
   return (
-    <div className="relative w-full overflow-hidden py-32 bg-black border-y border-white/5 skew-y-[-1deg] z-20">
+    <div className="relative w-full overflow-hidden py-32 bg-black skew-y-[-1deg] z-20">
       <div className="flex whitespace-nowrap will-change-transform">
         <motion.div style={{ x }} className="flex gap-20 items-center">
           {[...Array(4)].map((_, i) => (
@@ -47,7 +47,7 @@ export function InfiniteMarquee() {
                   >
                     {item.text}
                   </span>
-                  <div className="w-12 h-[1px] bg-white/10" />
+
                 </div>
               ))}
             </div>

@@ -4,31 +4,31 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Plus, Search, Edit2, Trash2, ExternalLink } from 'lucide-react';
-import { getProjects, deleteProject, Project } from '@/lib/supabase';
+import { getProjectsAction, deleteProjectAction, Project } from '@/app/actions/projects';
 
 export default function ProjectsListPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | number | null>(null);
 
   useEffect(() => {
     fetchProjects();
   }, []);
 
   const fetchProjects = async () => {
-    const data = await getProjects();
+    const data = await getProjectsAction();
     setProjects(data);
     setLoading(false);
   };
 
-  const handleDelete = async (id: string, title: string) => {
+  const handleDelete = async (id: string | number, title: string) => {
     if (!confirm(`Apakah Anda yakin ingin menghapus project "${title}"?`)) {
       return;
     }
     
     setDeleting(id);
-    const success = await deleteProject(id);
+    const success = await deleteProjectAction(id);
     
     if (success) {
       setProjects(projects.filter(p => p.id !== id));

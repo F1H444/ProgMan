@@ -1,4 +1,4 @@
-import { createClient, Project as SupabaseProject } from './supabase';
+import { supabase } from './supabase';
 
 export interface Project {
   id: number | string;
@@ -59,37 +59,33 @@ const staticProjects: Project[] = [
   },
 ];
 
-// Convert Supabase project to local Project format
-function convertProject(p: SupabaseProject): Project {
-  return {
-    id: p.id,
-    slug: p.slug,
-    title: p.title,
-    category: p.category,
-    tech: p.tech,
-    image: p.image,
-    longImages: p.long_images || undefined,
-    size: p.size || 'small',
-  };
-}
-
 // Fetch projects from Supabase, fallback to static
 export async function fetchProjects(): Promise<Project[]> {
   try {
-    const supabase = createClient();
     const { data, error } = await supabase
       .from('projects')
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
       console.log('Using static projects fallback');
       return staticProjects;
     }
 
-    return data.map(convertProject);
-  } catch {
-    console.log('Using static projects fallback');
+    return data.map(p => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      category: p.category,
+      tech: p.tech || [],
+      image: p.image,
+      longImages: p.long_images || undefined,
+      size: p.size || 'small',
+    }));
+  } catch (error: any) {
+    console.log('Using static projects fallback due to error:', error.message);
     return staticProjects;
   }
 }
@@ -97,21 +93,31 @@ export async function fetchProjects(): Promise<Project[]> {
 // Fetch single project by slug from Supabase
 export async function fetchProjectBySlug(slug: string): Promise<Project | null> {
   try {
-    const supabase = createClient();
     const { data, error } = await supabase
       .from('projects')
       .select('*')
       .eq('slug', slug)
+      .limit(1)
       .single();
 
-    if (error || !data) {
+    if (error) {
       // Fallback to static
       const staticProject = staticProjects.find(p => p.slug === slug);
       return staticProject || null;
     }
 
-    return convertProject(data);
-  } catch {
+    return {
+      id: data.id,
+      slug: data.slug,
+      title: data.title,
+      category: data.category,
+      tech: data.tech || [],
+      image: data.image,
+      longImages: data.long_images || undefined,
+      size: data.size || 'small',
+    };
+  } catch (error: any) {
+    console.log('Using static project fallback due to error:', error.message);
     const staticProject = staticProjects.find(p => p.slug === slug);
     return staticProject || null;
   }
@@ -119,4 +125,3 @@ export async function fetchProjectBySlug(slug: string): Promise<Project | null> 
 
 // Keep static export for backward compatibility during transition
 export const projects: Project[] = staticProjects;
-

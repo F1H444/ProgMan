@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 const tech = [
-  "React", "Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Framer Motion", 
+  "React", "Next.js", "TypeScript", "Tailwind CSS", "Neon Database", "Framer Motion", 
   "Node.js", "Prisma", "PostgreSQL", "Three.js", "Radix UI", "Lucide Icons",
   "Python", "Laravel", "MySQL", "Docker", "Git", "Figma"
 ];

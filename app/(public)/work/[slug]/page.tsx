@@ -179,7 +179,7 @@ export default function ProjectPage() {
                <div className="flex gap-4">
                   <Magnetic strength={0.3}>
                     <a href="https://wa.me/6281216802722" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-8 py-4 bg-white rounded-full transition-transform hover:scale-105">
-                      <span className="text-black font-bold text-xs uppercase tracking-widest">Joki Sekarang</span>
+                      <span className="text-black font-bold text-xs uppercase tracking-widest">Konsultasi</span>
                       <ExternalLink size={14} className="text-black" />
                     </a>
                   </Magnetic>
@@ -209,13 +209,13 @@ export default function ProjectPage() {
            <div className="p-12 border border-white/5 rounded-3xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors group">
               <Layout className="text-zinc-600 mb-8 group-hover:text-white transition-colors" size={32} />
               <h3 className="text-white font-bold text-xl mb-4">Hasil Akhir</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">Kode bersih (Clean Code), dokumentasi lengkap, dan hasil yang siap dipresentasikan di hadapan penguji UKK.</p>
+              <p className="text-zinc-500 text-sm leading-relaxed">Kode yang rapi, dokumentasi lengkap, dan hasil akhir yang siap rilis untuk ngembangin bisnismu.</p>
            </div>
 
            <div className="p-12 border border-white/5 rounded-3xl bg-white/[0.02] hover:bg-white/[0.04] transition-colors group">
               <Boxes className="text-zinc-600 mb-8 group-hover:text-white transition-colors" size={32} />
               <h3 className="text-white font-bold text-xl mb-4">Layanan Lainnya</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">Gratis konsultasi dan revisi ringan hingga tugas benar-benar dinyatakan lulus atau diterima oleh penguji.</p>
+              <p className="text-zinc-500 text-sm leading-relaxed">Gratis konsultasi dan maintenance ringan hingga proyek benar-benar siap rilis dan diterima dengan baik oleh penggunamu.</p>
            </div>
         </div>
       </div>

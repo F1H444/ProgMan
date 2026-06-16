@@ -1,232 +1,146 @@
 'use client';
 
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Magnetic } from '@/components/ui/Magnetic';
-import { ChevronDown } from 'lucide-react';
 import { fetchProjects, projects as staticProjects, Project } from '@/lib/projects';
 import { cn } from '@/lib/utils';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const colors = [
-    'hover:border-blue-500/50',
-    'hover:border-purple-500/50',
-    'hover:border-cyan-500/50',
-    'hover:border-yellow-500/50',
-    'hover:border-green-500/50'
-  ];
-  const hoverColor = colors[index % colors.length];
-  const textColors = [
-    'group-hover:text-blue-500',
-    'group-hover:text-purple-500',
-    'group-hover:text-cyan-500',
-    'group-hover:text-yellow-500',
-    'group-hover:text-green-500'
-  ];
-  const textColor = textColors[index % textColors.length];
-
+function EditorialProjectCard({ project, index }: { project: Project; index: number }) {
+  const isEven = index % 2 === 0;
+  
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className={cn(
-        "group relative flex flex-col bg-zinc-900/40 rounded-[2rem] border border-white/5 overflow-hidden transition-all duration-500",
-        hoverColor
-      )}
-    >
-      <Link href={`/work/${project.slug}`} className="relative aspect-video overflow-hidden">
-        <Image 
-          src={project.image} 
-          alt={project.title} 
-          fill 
-          className="object-cover object-top transition-all duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500" />
+    <div className={cn(
+      "flex flex-col lg:flex-row items-center gap-12 lg:gap-24 mb-32 md:mb-48 group",
+      isEven ? "lg:flex-row" : "lg:flex-row-reverse"
+    )}>
+      {/* Image Side */}
+      <Link href={`/work/${project.slug}`} className="w-full lg:w-3/5 block overflow-hidden rounded-3xl relative aspect-[4/3] md:aspect-[16/10]">
+        <motion.div
+          initial={{ scale: 1.1 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="w-full h-full"
+        >
+          <Image 
+            src={project.image} 
+            alt={project.title} 
+            fill 
+            className="object-cover object-top transition-transform duration-1000 group-hover:scale-105"
+          />
+        </motion.div>
+        {/* Subtle overlay */}
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all duration-700" />
       </Link>
 
-      <div className="p-8 flex flex-col gap-6">
-        <div>
-          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-3 block">
-            {project.category}
-          </span>
-          <Link href={`/work/${project.slug}`}>
-            <h4 className={cn("text-2xl font-bold text-white tracking-tight transition-colors", textColor)}>
-              {project.title}
-            </h4>
-          </Link>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((t, idx) => (
-            <span key={idx} className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono text-zinc-400 uppercase tracking-widest">
-              {t}
-            </span>
-          ))}
-        </div>
-
-        <Link 
-          href={`/work/${project.slug}`}
-          className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors mt-2"
+      {/* Text Side */}
+      <div className="w-full lg:w-2/5 flex flex-col justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true, margin: "-100px" }}
         >
-          <span>Lihat Detailnya</span>
-          <div className="w-1 h-1 rounded-full bg-current" />
-        </Link>
+          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-6 block">
+            {String(index + 1).padStart(2, '0')} // {project.category}
+          </span>
+          <h4 className="text-4xl md:text-5xl font-medium text-white tracking-tight leading-tight mb-8 group-hover:text-zinc-200 transition-colors">
+            {project.title}
+          </h4>
+          
+          <div className="flex flex-wrap gap-3 mb-10">
+            {project.tech.map((t, idx) => (
+              <span key={idx} className="px-4 py-2 bg-white/[0.03] border border-white/5 rounded-full text-xs text-zinc-400">
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <Link 
+            href={`/work/${project.slug}`}
+            className="flex items-center gap-4 text-sm font-semibold tracking-wide text-zinc-300 hover:text-white transition-colors w-fit"
+          >
+            <span>Lihat Studi Kasus</span>
+            <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-colors bg-white/5">
+              <ArrowRight size={16} />
+            </div>
+          </Link>
+        </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1
-    }
-  }
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.9, y: 40 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      duration: 1,
-      ease: [0.16, 1, 0.3, 1] as any
-    }
-  }
-};
-
 export function ProjectSection() {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [projects, setProjects] = useState<Project[]>(staticProjects);
-  const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const loadProjects = async () => {
       const data = await fetchProjects();
       setProjects(data);
-      setLoading(false);
     };
     loadProjects();
   }, []);
 
-  const visibleProjects = isExpanded ? projects : projects.slice(0, 4);
-
   return (
-    <section id="work" className="relative min-h-screen py-24 bg-black z-10">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 relative">
+    <section id="work" className="relative min-h-screen py-32 bg-black z-10 overflow-hidden">
+      <div className="max-w-[90rem] mx-auto px-6 md:px-12 relative">
         
         {/* Section Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 md:mb-24 flex flex-col items-center text-center"
+          className="mb-24 md:mb-40 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/10 pb-12"
         >
-          <h2 className="text-xs font-mono text-zinc-600 uppercase tracking-[0.6em] mb-4 md:mb-6">PROJECT</h2>
-          <h3 className="text-4xl md:text-7xl font-bold text-white tracking-tighter leading-tight">
-            PROJECT <span className="text-blue-500">UNGGULAN.</span>
-          </h3>
+          <div>
+            <h2 className="text-xs font-mono text-zinc-600 uppercase tracking-[0.4em] mb-6">Portfolio</h2>
+            <h3 className="text-5xl md:text-7xl font-medium text-white tracking-tight leading-tight">
+              Best <span className="text-blue-500 italic">Projects.</span>
+            </h3>
+          </div>
+          <p className="text-zinc-500 text-lg max-w-sm">
+            Karya terbaik kami yang memadukan desain kelas atas dan performa kode yang optimal.
+          </p>
         </motion.div>
 
-        {/* Standard Project Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12"
-        >
-          <AnimatePresence mode="popLayout">
-            {visibleProjects.map((project, i) => {
-              const isLast = i === visibleProjects.length - 1;
-              const isOdd = visibleProjects.length % 2 !== 0;
-              
-              return (
-                <motion.div 
-                  key={project.id} 
-                  variants={cardVariants}
-                  layout
-                  initial="hidden"
-                  animate="visible"
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className={cn(
-                    isLast && isOdd ? "md:col-span-2" : ""
-                  )}
-                >
-                  <ProjectCard project={project} index={i} />
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* View All CTA */}
-        <div className="mt-20 flex justify-center">
-           {!isExpanded && projects.length > 4 && (
-             <Magnetic strength={0.3}>
-               <motion.button 
-                 initial={{ opacity: 0 }}
-                 whileInView={{ opacity: 1 }}
-                 transition={{ delay: 1 }}
-                 onClick={() => setIsExpanded(true)}
-                 className="flex flex-col items-center gap-6 group"
-               >
-                 <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-zinc-500 group-hover:text-white transition-colors">Cek Project Lainnya ({projects.length - 4})</span>
-                 <motion.div 
-                   animate={{ y: [0, 5, 0] }}
-                   transition={{ repeat: Infinity, duration: 2 }}
-                   className="w-12 h-12 flex items-center justify-center border border-white/10 rounded-full text-zinc-500 group-hover:border-blue-500 group-hover:text-blue-500 transition-all bg-zinc-950"
-                 >
-                   <ChevronDown size={18} />
-                 </motion.div>
-               </motion.button>
-             </Magnetic>
-           )}
+        {/* Cinematic Projects List */}
+        <div className="flex flex-col">
+          {(isExpanded ? projects : projects.slice(0, 4)).map((project, i) => (
+            <EditorialProjectCard key={project.id} project={project} index={i} />
+          ))}
         </div>
 
-        {/* Workflow / Steps */}
-        <div className="mt-40 pt-40 border-t border-white/5">
+        {/* Show More Button */}
+        {!isExpanded && projects.length > 4 && (
           <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex justify-center mt-8"
           >
-            {[
-              { id: '01', title: 'Tanya-Tanya Dulu' },
-              { id: '02', title: 'Mulai Bangun' },
-              { id: '03', title: 'Poles & Rapikan' },
-              { id: '04', title: 'Beres & Kirim' }
-            ].map((step, idx) => (
+            <button 
+              onClick={() => setIsExpanded(true)}
+              className="group flex flex-col items-center gap-4 cursor-pointer"
+            >
+              <span className="text-xs font-mono uppercase tracking-[0.4em] text-zinc-500 group-hover:text-white transition-colors">
+                Lihat Project Lainnya ({projects.length - 4})
+              </span>
               <motion.div 
-                key={idx}
-                variants={{
-                  hidden: { opacity: 0, x: -20 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.8 } }
-                }}
+                animate={{ y: [0, 6, 0] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="w-14 h-14 flex items-center justify-center border border-white/10 rounded-full text-zinc-500 group-hover:border-blue-500 group-hover:text-blue-500 transition-all bg-white/[0.03] backdrop-blur-xl"
               >
-                <span className="text-zinc-900 font-black text-6xl mb-6 block leading-none">{step.id}</span>
-                <h4 className="font-bold text-white uppercase tracking-widest text-lg mb-4">{step.title}</h4>
-                <p className="text-zinc-500 text-sm leading-relaxed">
-                  {idx === 0 && "Diskusikan kebutuhan tugas atau proyek Anda secara mendalam dengan tim ahli kami."}
-                  {idx === 1 && "Proses koding dan teknis dimulai dengan standar koding yang bersih dan optimal."}
-                  {idx === 2 && "Kami melakukan pengujian menyeluruh untuk memastikan semua fitur berjalan sempurna."}
-                  {idx === 3 && "Penyerahan hasil akhir beserta dokumentasi lengkap untuk kemudahan Anda."}
-                </p>
+                <ChevronDown size={20} />
               </motion.div>
-            ))}
+            </button>
           </motion.div>
-        </div>
+        )}
+
       </div>
     </section>
   );

@@ -1,137 +1,87 @@
 'use client';
 
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
-import { Magnetic } from '@/components/ui/Magnetic';
 import { ArrowDown } from 'lucide-react';
-import { Counter } from '@/components/ui/Counter';
 import { useLoading } from '@/components/providers/LoadingProvider';
-
-const heading = "GHOSTDEV";
-const characters = heading.split("");
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    }
-  }
-};
-
-const charVariants: Variants = {
-  hidden: { y: "100%", opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 1.2,
-      ease: [0.16, 1, 0.3, 1]
-    }
-  }
-};
+import Image from 'next/image';
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { isLoading } = useLoading();
   
   return (
-    <section ref={containerRef} className="relative min-h-[100vh] flex flex-col items-center justify-center overflow-hidden py-24 px-0 bg-black">
+    <section ref={containerRef} className="relative min-h-[100vh] w-full flex flex-col justify-end pb-24 pt-40 px-6 md:px-8 bg-black">
       
-      {/* Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Background Image Container */}
+      <div className="absolute top-0 left-0 w-full h-[85%] pointer-events-none overflow-hidden">
+        <Image
+          src="/hero-bg.png"
+          alt="Night Sky Landscape"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+        {/* Gradient Mask to fade image into black background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl px-8 flex flex-col items-center text-center">
+      <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center mt-auto">
         {/* Badge */}
         <motion.div
            initial={{ opacity: 0, y: 20 }}
            animate={isLoading ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
-           transition={{ duration: 0.8, ease: "easeOut" }}
-           className="mb-8 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-medium text-zinc-300"
+           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+           className="mb-8 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-semibold text-zinc-300 flex items-center gap-2 cursor-pointer hover:bg-white/10 transition-colors"
         >
-          GASS JOKI SEKARANG 
+          KONSULTASI GRATIS <span className="text-zinc-500">&gt;</span>
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isLoading ? "hidden" : "visible"}
-          className="flex justify-center overflow-hidden mb-6 whitespace-nowrap relative group cursor-default"
-        >
-          {characters.map((char, i) => (
-            <div key={i} className="overflow-hidden">
-              <motion.span
-                variants={charVariants}
-                className="text-[12vw] font-black text-white leading-[0.85] tracking-tighter inline-block relative"
-              >
-                {char}
-              </motion.span>
-            </div>
-          ))}
-        </motion.div>
-
+        {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut", delay: 1 }}
-          className="max-w-2xl space-y-10 flex flex-col items-center"
+          transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
+          className="max-w-4xl mb-6"
         >
-          <h2 className="text-xl md:text-2xl text-zinc-400 font-light tracking-wide leading-relaxed">
-            Partner Rahasia Untuk Tugas <span className="text-yellow-500 font-semibold">UKK </span> Meliputi <span className="text-purple-500 font-semibold">Programming</span>,<span className="text-cyan-500 font-semibold"> Perancangan Database</span> & <span className="text-purple-500 font-semibold">Diagram</span>.
-            <br />
-          </h2>
+          <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-medium text-white tracking-tight leading-[1.05]">
+            Bikin website & aplikasi, tanpa ribet.
+          </h1>
+        </motion.div>
 
-          <div className="flex flex-col sm:flex-row gap-6 items-center">
-            <Magnetic strength={0.3}>
-              <a 
-                href="https://wa.me/6281216802722" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group relative h-14 px-10 flex items-center justify-center overflow-hidden bg-white text-black rounded-full transition-all hover:scale-105"
-              >
-                <span className="relative z-10 text-xs font-bold uppercase tracking-widest">JOKI SEKARANG!!</span>
-              </a>
-            </Magnetic>
-            <Magnetic strength={0.3}>
-              <a 
-                href="#work" 
-                className="group relative h-14 px-10 flex items-center justify-center overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm rounded-full transition-all hover:bg-white/10 hover:border-white/20"
-              >
-                <span className="relative z-10 text-xs font-bold uppercase tracking-widest text-zinc-300 group-hover:text-white transition-all">Lihat Project</span>
-              </a>
-            </Magnetic>
-          </div>
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut", delay: 0.6 }}
+          className="text-lg md:text-xl text-zinc-400 font-light max-w-2xl leading-relaxed mb-10"
+        >
+          Kami bantu desain, koding, sampai rilis aplikasimu. Tinggal duduk manis, biar tim GhostDev yang urus semua urusan teknisnya.
+        </motion.p>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 md:gap-16 pt-8 border-t border-white/5 mt-8 w-full">
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold text-white">UKK</span>
-              <span className="text-xs text-zinc-500 uppercase tracking-wider mt-1">Spesialis</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold text-white">
-                {!isLoading && <Counter target={100} />}
-                {isLoading && "0"}
-                %
-              </span>
-              <span className="text-xs text-zinc-500 uppercase tracking-wider mt-1">Kepuasan</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-2xl font-bold text-white">24/7</span>
-              <span className="text-xs text-zinc-500 uppercase tracking-wider mt-1">Dukungan</span>
-            </div>
-          </div>
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isLoading ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut", delay: 0.8 }}
+        >
+          <a 
+            href="https://wa.me/6281216802722" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="group relative h-14 px-10 flex items-center justify-center overflow-hidden bg-white text-black rounded-full transition-all hover:bg-zinc-200 hover:scale-105"
+          >
+            <span className="relative z-10 text-sm font-semibold tracking-wide">Mulai Sekarang</span>
+          </a>
         </motion.div>
       </div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={isLoading ? { opacity: 0 } : { opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50"
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce opacity-50"
       >
         <ArrowDown className="w-5 h-5 text-white/50" />
       </motion.div>

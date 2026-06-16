@@ -11,7 +11,7 @@ import {
   ArrowUpRight,
   Clock
 } from 'lucide-react';
-import { getProjects, Project } from '@/lib/supabase';
+import { getProjectsAction, Project } from '@/app/actions/projects';
 
 export default function AdminDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getProjects();
+      const data = await getProjectsAction();
       setProjects(data);
       setLoading(false);
     };

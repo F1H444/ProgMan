@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowLeft, Save, Plus, X, ImageIcon, Trash2 } from 'lucide-react';
-import { createClient, updateProject, deleteProject, uploadProjectImage, Project } from '@/lib/supabase';
+import { getProjectByIdAction, updateProjectAction, deleteProjectAction, uploadProjectImageAction, Project } from '@/app/actions/projects';
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -27,14 +27,9 @@ export default function EditProjectPage() {
 
   useEffect(() => {
     const fetchProject = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('id', id)
-        .single();
+      const data = await getProjectByIdAction(id as string);
 
-      if (error || !data) {
+      if (!data) {
         alert('Project tidak ditemukan');
         router.push('/admin/projects');
         return;
@@ -72,7 +67,7 @@ export default function EditProjectPage() {
 
     setUploadingHero(true);
     setUploadingHero(true);
-    const { url, error } = await uploadProjectImage(file, 'hero');
+    const { url, error } = await uploadProjectImageAction(file, 'hero');
     if (url) {
       setFormData({ ...formData, image: url });
     } else {
@@ -87,7 +82,7 @@ export default function EditProjectPage() {
 
     setUploadingGallery(true);
     setUploadingGallery(true);
-    const { url, error } = await uploadProjectImage(file, 'gallery');
+    const { url, error } = await uploadProjectImageAction(file, 'gallery');
     if (url) {
       setFormData({ ...formData, long_images: [...formData.long_images, url] });
     } else {
@@ -112,7 +107,7 @@ export default function EditProjectPage() {
     }
 
     setSaving(true);
-    const project = await updateProject(id as string, {
+    const project = await updateProjectAction(id as string, {
       ...formData,
       long_images: formData.long_images.length > 0 ? formData.long_images : null,
       description: formData.description || null,
@@ -131,7 +126,7 @@ export default function EditProjectPage() {
       return;
     }
 
-    const success = await deleteProject(id as string);
+    const success = await deleteProjectAction(id as string);
     if (success) {
       router.push('/admin/projects');
     } else {

@@ -15,7 +15,7 @@ GhostDev adalah sebuah website joki ukk yang cepat dan terpecaya
 - **✨ Animasi Interaktif**: Pengalaman pengguna yang hidup dengan [Framer Motion](https://www.framer.com/motion/).
 - **📱 Responsif**: Tata letak yang beradaptasi sempurna di semua perangkat (Desktop, Tablet, Mobile).
 - **🔐 Admin Dashboard**: Panel admin yang aman untuk pengelolaan konten dan data.
-- **🗄️ Backend Supabase**: Integrasi database dan autentikasi yang kuat dengan [Supabase](https://supabase.com/).
+- **🗄️ Backend Neon Tech**: Integrasi database serverless PostgreSQL yang kuat dengan [Neon Tech](https://neon.tech/).
 
 ## Tech Stack
 
@@ -29,7 +29,7 @@ Project ini menggunakan kombinasi teknologi terbaik saat ini:
 | **Styling**    | [Tailwind CSS v4](https://tailwindcss.com/)     |
 | **Animasi**    | [Framer Motion](https://www.framer.com/motion/) |
 | **Icons**      | [Lucide React](https://lucide.dev/)             |
-| **Backend**    | [Supabase](https://supabase.com/)               |
+| **Backend**    | [Neon Tech (Postgres)](https://neon.tech/)      |
 | **Font**       | [Geist](https://vercel.com/font)                |
 
 ## Memulai (Getting Started)
@@ -62,7 +62,7 @@ Pastikan Anda telah menginstal [Node.js](https://nodejs.org/) (versi 18+ direkom
     ```
 
 3.  **Konfigurasi Environment Variables:**
-    Duplikasi file `.env.local.example` (jika ada) atau buat file `.env.local` baru dan isi variabel yang diperlukan untuk koneksi Supabase.
+    Duplikasi file `.env.local.example` (jika ada) atau buat file `.env.local` baru dan isi variabel yang diperlukan untuk koneksi Neon Tech database.
 
 4.  **Jalankan Server Development:**
 

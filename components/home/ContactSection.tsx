@@ -2,139 +2,113 @@
 
 import { motion } from "framer-motion";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { MessageSquare, Phone, Mail } from "lucide-react";
-
-const contactHeading = "Kirim Tugasmu.";
-const characters = contactHeading.split("");
+import { Phone, Mail, ArrowUpRight } from "lucide-react";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="min-h-screen py-24 flex items-center bg-black relative z-10">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 w-full relative">
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-end">
-          <div>
-            <motion.h2 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="text-xs font-mono text-zinc-600 uppercase tracking-[0.4em] mb-10"
-            >
-              Hubungi
-            </motion.h2>
-            
-            <div className="overflow-hidden flex flex-wrap mb-8 md:mb-12">
-              {characters.map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ y: "100%" }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ 
-                    duration: 1, 
-                    delay: i * 0.03,
-                    ease: [0.16, 1, 0.3, 1]
-                  }}
-                  className="text-4xl md:text-8xl font-bold text-white tracking-tighter leading-[0.9] inline-block whitespace-pre"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </div>
+    <section id="contact" className="min-h-screen py-32 flex items-center bg-black relative z-10 overflow-hidden">
+      
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-white/[0.02] blur-[120px] rounded-full pointer-events-none" />
 
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
+      <div className="max-w-[90rem] mx-auto px-6 md:px-12 w-full relative">
+        <div className="flex flex-col lg:flex-row gap-20 lg:gap-32 items-center">
+          
+          {/* Left Side: Typography */}
+          <div className="w-full lg:w-1/2">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="text-zinc-500 text-lg md:text-xl max-w-md leading-relaxed mb-12"
+              transition={{ duration: 0.8 }}
             >
-              Tanya-tanya soal tugas atau proyek UKK kamu gratis kok. Kami siap kasih solusi teknis yang paling oke buat kamu.
-            </motion.p>
-          </div>
+              <h2 className="text-xs font-mono text-zinc-600 uppercase tracking-[0.4em] mb-8">Hubungi Kami</h2>
+              
+              <h3 className="text-6xl md:text-8xl lg:text-[7rem] font-medium text-white tracking-tight leading-[0.95] mb-10">
+                Hubungi<br /><span className="text-blue-500 italic">Sekarang!!</span>
+              </h3>
 
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-6"
-          >
-            <Magnetic strength={0.1}>
-              <a 
-                href="https://wa.me/6281216802722" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between p-8 rounded-2xl border border-white/5 bg-white/5 hover:bg-white/10 transition-all duration-500"
-              >
-                <div className="flex items-center gap-6">
-                   <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-500">
-                     <Phone size={20} />
-                   </div>
-                   <div>
-                     <p className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest mb-1">WhatsApp</p>
-                     <p className="text-white font-bold">0812-1680-2722</p>
-                   </div>
-                </div>
-                <div className="opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-white text-right">
-                  <span className="text-[10px] font-mono uppercase tracking-widest block">Online 24/7</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500">Chat Sekarang</span>
-                </div>
-              </a>
-            </Magnetic>
+              <p className="text-zinc-400 text-lg md:text-xl max-w-md leading-relaxed mb-12 font-light">
+                Punya ide brilian atau sekadar ingin diskusi teknis? Kami siap mendengarkan dan mewujudkannya.
+              </p>
 
-            <Magnetic strength={0.1}>
-              <a 
-                href="mailto:admin@ghostdev.co" 
-                className="group flex items-center justify-between p-8 rounded-2xl border border-white/5 bg-transparent hover:border-white/20 transition-all duration-500"
-              >
-                <div className="flex items-center gap-6">
-                   <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-500">
-                     <Mail size={20} />
-                   </div>
-                   <div>
-                     <p className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest mb-1">Email</p>
-                     <p className="text-white font-bold">admin@ghostdev.co</p>
-                   </div>
-                </div>
-                <div className="opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-white text-right">
-                   <span className="text-[10px] font-mono uppercase tracking-widest block">Fast Response</span>
-                   <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500">Kirim Surat</span>
-                </div>
-              </a>
-            </Magnetic>
-          </motion.div>
-        </div>
-
-        {/* More Content Expansion */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-16 pt-16 border-t border-white/5">
-          <div className="space-y-6">
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs font-mono">Jam Operasional</h4>
-            <ul className="space-y-2 text-zinc-500 text-sm">
-              <li className="flex justify-between"><span>Senin - Jumat</span> <span>08:00 - 22:00</span></li>
-              <li className="flex justify-between"><span>Sabtu - Minggu</span> <span>10:00 - 18:00</span></li>
-            </ul>
-          </div>
-          <div className="md:col-span-2 space-y-6">
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs font-mono">Mengapa GhostDev?</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-sm text-zinc-500 leading-relaxed">
-              <p>Memprioritaskan kualitas kode dan logika yang bersih, memastikan tugas Anda dapat dipertanggungjawabkan.</p>
-              <p>Dukungan revisi dan konsultasi gratis hingga proyek Anda benar-benar sesuai keinginan penguji.</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-20 pt-16 flex flex-col md:flex-row justify-between items-center gap-8">
-           <div className="flex flex-col items-center md:items-start gap-4">
-              <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.5em]">Tersedia Global</span>
-              <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
-                 <span className="text-zinc-400 text-sm font-medium">Siap bantu garap tugas atau joki baru nih</span>
+              <div className="flex items-center gap-4">
+                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+                 <span className="text-zinc-400 text-sm font-medium">Tersedia untuk proyek baru</span>
               </div>
+            </motion.div>
+          </div>
+
+          {/* Right Side: Contact Cards */}
+          <div className="w-full lg:w-1/2 flex flex-col gap-6">
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Magnetic strength={0.1}>
+                <a 
+                  href="https://wa.me/6281216802722" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
+                >
+                  <div className="flex items-center gap-6 mb-6 sm:mb-0">
+                     <div className="w-16 h-16 rounded-full bg-white/[0.05] group-hover:bg-green-500/10 flex items-center justify-center text-white group-hover:text-green-500 transition-colors duration-500">
+                       <Phone size={24} strokeWidth={1.5} />
+                     </div>
+                     <div>
+                       <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest mb-2">WhatsApp</p>
+                       <p className="text-white font-medium text-xl md:text-2xl tracking-tight">0812-1680-2722</p>
+                     </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 sm:self-center self-end">
+                    <ArrowUpRight size={20} className="transition-transform duration-500 group-hover:rotate-45" />
+                  </div>
+                </a>
+              </Magnetic>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <Magnetic strength={0.1}>
+                <a 
+                  href="mailto:admin@ghostdev.co" 
+                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
+                >
+                  <div className="flex items-center gap-6 mb-6 sm:mb-0">
+                     <div className="w-16 h-16 rounded-full bg-white/[0.05] group-hover:bg-blue-500/10 flex items-center justify-center text-white group-hover:text-blue-500 transition-colors duration-500">
+                       <Mail size={24} strokeWidth={1.5} />
+                     </div>
+                     <div>
+                       <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest mb-2">Email</p>
+                       <p className="text-white font-medium text-xl md:text-2xl tracking-tight">admin@ghostdev.co</p>
+                     </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 sm:self-center self-end">
+                    <ArrowUpRight size={20} className="transition-transform duration-500 group-hover:rotate-45" />
+                  </div>
+                </a>
+              </Magnetic>
+            </motion.div>
+          </div>
+
+        </div>
+
+        {/* Footer info */}
+        <div className="mt-32 pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+           <div className="text-zinc-500 text-sm font-light">
+              &copy; {new Date().getFullYear()} GhostDev. All rights reserved.
            </div>
            
-           <div className="flex gap-12 text-zinc-600 font-mono text-[10px] uppercase tracking-widest">
-              <span className="text-blue-500/40">GhostDev</span> // <span className="text-purple-500/40">Est. 2026</span>
+           <div className="flex gap-8 text-zinc-600 font-mono text-[10px] uppercase tracking-widest">
+              <span>Surabaya, ID</span>
+              <span>EST. 2026</span>
            </div>
         </div>
       </div>

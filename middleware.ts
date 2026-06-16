@@ -1,5 +1,8 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
+
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-super-secret-key-change-this-in-production';
+const KEY = new TextEncoder().encode(JWT_SECRET);
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -8,71 +11,36 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-        },
-      },
+  // Get admin session cookie
+  const adminSession = request.cookies.get('admin_session')?.value;
+  
+  let user = null;
+  if (adminSession) {
+    try {
+      const { payload } = await jwtVerify(adminSession, KEY, {
+        algorithms: ['HS256'],
+      });
+      user = payload;
+    } catch (error) {
+      // Token invalid atau expired
     }
-  )
-
-  // This will refresh the session if it's expired
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Melindungi rute /admin, redirect ke /login jika tidak ada sesi user
-  if (request.nextUrl.pathname.startsWith('/admin') && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Existing CSP and security headers logic follows...
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const supabaseHost = supabaseUrl ? new URL(supabaseUrl).host : '';
+  // Melindungi rute /admin (kecuali /admin/login), redirect ke /admin/login jika tidak ada sesi user
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+  const isLoginRoute = request.nextUrl.pathname === '/admin/login';
+  
+  if (isAdminRoute && !isLoginRoute && !user) {
+    return NextResponse.redirect(new URL('/admin/login', request.url))
+  }
 
   // Security Headers
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: ${supabaseUrl} *.supabase.co https://images.unsplash.com;
-    connect-src 'self' ${supabaseUrl} *.supabase.co;
+    img-src 'self' blob: data: https://images.unsplash.com;
+    connect-src 'self' https://*.supabase.co;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
@@ -86,11 +54,6 @@ export async function middleware(request: NextRequest) {
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=()');
-
-  // Simple Rate Limiting Stub (for demonstration)
-  // In production, use Vercel KV or Upstash
-  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
-  // console.log(`Request from ${ip}`);
 
   return response;
 }
@@ -107,3 +70,4 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
+

@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import { createServerClient } from '@supabase/ssr'
+import { verifyJWT } from '@/lib/auth'
 import { cookies } from 'next/headers'
 
 // 1. Skema Validasi Zod
@@ -14,22 +14,14 @@ const updateProfileSchema = z.object({
 export async function updateProfile(formData: FormData) {
   const cookieStore = await cookies()
 
-  // Inisialisasi Supabase Client
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    }
-  )
-
   // Verifikasi Otorisasi (Memastikan user login)
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-  if (authError || !user) {
+  const token = cookieStore.get('admin_session')?.value
+  if (!token) {
+    throw new Error('Unauthorized: Anda harus login untuk melakukan aksi ini.')
+  }
+
+  const user = await verifyJWT(token)
+  if (!user) {
     throw new Error('Unauthorized: Anda harus login untuk melakukan aksi ini.')
   }
 

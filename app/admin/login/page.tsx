@@ -1,37 +1,33 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react';
-import { createClient } from '@/lib/supabase';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Lock, Mail, AlertCircle } from "lucide-react";
+import { loginAdmin } from "@/app/actions/auth";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const result = await loginAdmin(email, password);
 
-    if (error) {
-      setError('Email atau password salah');
+    if (result?.error) {
+      setError(result.error);
       setLoading(false);
       return;
     }
 
-    router.push('/admin');
+    router.push("/admin");
     router.refresh();
   };
 
@@ -54,7 +50,9 @@ export default function AdminLoginPage() {
             <Lock className="w-8 h-8 text-white" />
           </motion.div>
           <h1 className="text-3xl font-bold text-white mb-2">Admin Panel</h1>
-          <p className="text-zinc-500 text-sm">Masukkan kredensial untuk melanjutkan</p>
+          <p className="text-zinc-500 text-sm">
+            Masukkan kredensial untuk melanjutkan
+          </p>
         </div>
 
         {/* Login Form */}
@@ -88,11 +86,13 @@ export default function AdminLoginPage() {
 
           {/* Password Field */}
           <div className="space-y-2">
-            <label className="text-zinc-400 text-sm font-medium">Password</label>
+            <label className="text-zinc-400 text-sm font-medium">
+              Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -104,7 +104,11 @@ export default function AdminLoginPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -123,12 +127,10 @@ export default function AdminLoginPage() {
                 <span>Memproses...</span>
               </>
             ) : (
-              'Masuk'
+              "Masuk"
             )}
           </motion.button>
         </form>
-
-
       </motion.div>
     </div>
   );

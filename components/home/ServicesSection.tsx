@@ -1,120 +1,115 @@
 'use client';
 
-import { motion, Variants } from 'framer-motion';
-import { Layout, Shield, Zap, Globe, Cpu, Smartphone } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Layout, Shield, Zap, Globe, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const services = [
   {
     title: "Pemrograman Web",
-    description: "Pengerjaan proyek website dengan fitur lengkap sesuai modul UKK, dijamin fungsional dan responsif.",
+    description: "Bikin website dari nol dengan fitur yang disesuaikan sama kebutuhanmu. Pasti cepat, fungsional, dan keren di HP maupun laptop.",
     icon: Globe,
-    className: "lg:col-span-2 md:col-span-2 bg-blue-600/10 border-blue-500/20",
-    color: "text-blue-500"
+    color: "text-blue-500",
+    hoverBg: "group-hover:bg-blue-500/10",
+    num: "01"
   },
   {
-    title: "Jaminan Lulus UKK",
-    description: "Pendampingan proyek dari perencanaan hingga demo aplikasi. Fokus pada kriteria penilaian penguji.",
+    title: "Solusi Lengkap",
+    description: "Gak cuma nulis kode, kita bantu dari konsep awal sampai aplikasinya bener-benar siap rilis.",
     icon: Zap,
-    className: "lg:col-span-1 md:col-span-1 bg-zinc-900/50 border-white/5",
-    color: "text-yellow-500"
+    color: "text-yellow-500",
+    hoverBg: "group-hover:bg-yellow-500/10",
+    num: "02"
   },
   {
     title: "UI/UX & Desain",
-    description: "Tampilan antarmuka yang modern dan profesional untuk meningkatkan nilai presentasi.",
+    description: "Desain website yang kekinian, gampang dipakai, dan pastinya bikin bisnismu keliatan lebih pro.",
     icon: Layout,
-    className: "lg:col-span-1 md:col-span-1 bg-zinc-900/50 border-white/5",
-    color: "text-purple-500"
+    color: "text-purple-500",
+    hoverBg: "group-hover:bg-purple-500/10",
+    num: "03"
   },
   {
     title: "Keamanan Sistem",
-    description: "Implementasi proteksi data dan autentikasi yang kuat sesuai standar keamanan web modern.",
+    description: "Sistem keamanan yang kuat biar data kamu aman dan gak gampang kebobolan.",
     icon: Shield,
-    className: "lg:col-span-1 md:col-span-1 bg-zinc-900/50 border-white/5",
-    color: "text-green-500"
+    color: "text-green-500",
+    hoverBg: "group-hover:bg-green-500/10",
+    num: "04"
   },
   {
-    title: "Bimbingan Teknis",
-    description: "Konsultasi intensif agar Anda siap menjawab setiap pertanyaan penguji.",
+    title: "Konsultasi Santai",
+    description: "Masih bingung mau bikin apa? Ngobrol santai aja dulu, gratis kok!",
     icon: Cpu,
-    className: "lg:col-span-3 md:col-span-1 bg-cyan-600/10 border-cyan-500/20",
-    color: "text-cyan-500"
+    color: "text-cyan-500",
+    hoverBg: "group-hover:bg-cyan-500/10",
+    num: "05"
   }
 ];
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1
-    }
-  }
-};
-
-const cardVariants: Variants = {
-  hidden: { y: 100, opacity: 0, scale: 0.95 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 1,
-      ease: [0.16, 1, 0.3, 1] as any
-    }
-  }
-};
-
 export function ServicesSection() {
   return (
-    <section id="services" className="min-h-screen flex items-center justify-center py-20 px-0 relative z-10 bg-black">
-      <div className="max-w-7xl mx-auto px-8 w-full">
+    <section id="services" className="py-32 relative z-10 bg-black">
+      <div className="max-w-[90rem] mx-auto px-6 md:px-12 w-full">
+        
+        {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mb-16"
+          className="mb-24 md:mb-32 flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/10 pb-12"
         >
-          <h2 className="text-xs font-mono text-zinc-600 uppercase tracking-[0.4em] mb-6">Keuntungan</h2>
-          <h3 className="text-4xl md:text-6xl font-bold text-white tracking-tighter">
-            Fast Results, High Grades,<br /><span className="text-blue-500 italic">Low Costs.</span>
-          </h3>
+          <div>
+            <h2 className="text-xs font-mono text-zinc-600 uppercase tracking-[0.4em] mb-6">Keuntungan</h2>
+            <h3 className="text-5xl md:text-7xl font-medium text-white tracking-tight leading-tight">
+              Fast Results, High Grades,<br /><span className="text-blue-500 italic">Low Costs.</span>
+            </h3>
+          </div>
+          <p className="text-zinc-500 text-lg max-w-sm leading-relaxed">
+            Semua yang kamu butuhin untuk go digital, ada di sini.
+          </p>
         </motion.div>
 
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
-        >
+        {/* Service Rows */}
+        <div className="flex flex-col">
           {services.map((service, i) => (
             <motion.div
               key={i}
-              variants={cardVariants}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
               className={cn(
-                "p-8 rounded-[2rem] border bg-zinc-900/40 flex flex-col gap-4 group relative overflow-hidden will-change-transform",
-                service.className
+                "group flex flex-col md:flex-row md:items-center gap-6 md:gap-12 py-10 md:py-14 border-b border-white/5 cursor-default transition-all duration-500 rounded-2xl px-6 md:px-10 -mx-6 md:-mx-10",
+                service.hoverBg
               )}
             >
-              <div className={cn("w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center transition-transform duration-500 group-hover:scale-110", service.color)}>
-                <service.icon size={24} />
-              </div>
+              {/* Number */}
+              <span className="text-zinc-800 font-mono text-sm tracking-widest md:w-16 shrink-0">
+                {service.num}
+              </span>
               
-              <div className="space-y-3">
-                <h4 className="text-2xl font-bold text-white tracking-tight">{service.title}</h4>
-                <p className="text-zinc-500 text-sm leading-relaxed max-w-[280px]">
-                  {service.description}
-                </p>
+              {/* Icon */}
+              <div className={cn(
+                "w-14 h-14 rounded-2xl bg-white/[0.03] flex items-center justify-center shrink-0 transition-all duration-500 group-hover:scale-110",
+                service.color
+              )}>
+                <service.icon size={26} strokeWidth={1.5} />
               </div>
 
-              {/* Decorative gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+              {/* Title */}
+              <h4 className="text-2xl md:text-3xl font-medium text-white tracking-tight md:flex-1 transition-colors group-hover:text-white">
+                {service.title}
+              </h4>
+
+              {/* Description */}
+              <p className="text-zinc-500 text-sm md:text-base leading-relaxed md:max-w-sm md:text-right group-hover:text-zinc-400 transition-colors">
+                {service.description}
+              </p>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

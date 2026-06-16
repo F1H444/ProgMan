@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GhostDev | Joki",
+  title: "GhostDev | Web & App Development",
   description: "Kami merancang pengalaman digital yang menghantui kompetisi. Pengembangan web premium dan layanan aplikasi elit.",
   keywords: ["pengembangan web", "pembuatan aplikasi", "agensi kreatif", "ghostdev", "desain responsif", "dark mode"],
   openGraph: {
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GhostDev | Joki",
+    title: "GhostDev | Web & App Development",
     description: "Kami merancang pengalaman digital yang luar biasa.",
   },
 };

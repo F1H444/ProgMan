@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${project.title} | GhostDev`,
-    description: `Studi Kasus: ${project.title} - Kategori: ${project.category}. Solusi cerdas untuk tugas UKK.`,
+    description: `Studi Kasus: ${project.title} - Kategori: ${project.category}. Solusi cerdas untuk bisnis digitalmu.`,
     openGraph: {
       title: project.title,
       description: `Lihat hasil proyek ${project.title} di GhostDev.`,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function ProjectLayout({ children }: { flex: any, children: React.ReactNode }) {
+export default function ProjectLayout({ children }: { children: React.ReactNode }) {
   // Hanya me-render children yang berisi page.tsx (Client Component aslinya)
   return <>{children}</>;
 }
