@@ -1,20 +1,38 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { jwtVerify } from 'jose'
+import { rateLimit } from '@/lib/rate-limit'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-super-secret-key-change-this-in-production';
 const KEY = new TextEncoder().encode(JWT_SECRET);
 
 export async function middleware(request: NextRequest) {
+  // 1. Rate Limiting
+  const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown-ip';
+  const rateLimitResult = rateLimit(ip, { limit: 100, windowMs: 60 * 1000 }); // 100 request per menit per IP
+  
+  if (!rateLimitResult.success) {
+    return new NextResponse('Too Many Requests', { status: 429 });
+  }
+
+  // Khusus untuk rute login admin, berikan rate limit lebih ketat (brute force protection)
+  const isLoginRoute = request.nextUrl.pathname === '/admin/login';
+  if (isLoginRoute && request.method === 'POST') {
+    const loginRateLimit = rateLimit(`${ip}-login`, { limit: 5, windowMs: 15 * 60 * 1000 }); // 5 percobaan per 15 menit
+    if (!loginRateLimit.success) {
+      return new NextResponse('Too Many Login Attempts. Please try again later.', { status: 429 });
+    }
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   })
 
-  // Get admin session cookie
+  // 2. Authentication & Authorization
   const adminSession = request.cookies.get('admin_session')?.value;
-  
   let user = null;
+
   if (adminSession) {
     try {
       const { payload } = await jwtVerify(adminSession, KEY, {
@@ -23,37 +41,18 @@ export async function middleware(request: NextRequest) {
       user = payload;
     } catch (error) {
       // Token invalid atau expired
+      // Sengaja tidak dilempar error agar user dialihkan ke halaman login
     }
   }
 
-  // Melindungi rute /admin (kecuali /admin/login), redirect ke /admin/login jika tidak ada sesi user
   const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
-  const isLoginRoute = request.nextUrl.pathname === '/admin/login';
   
   if (isAdminRoute && !isLoginRoute && !user) {
     return NextResponse.redirect(new URL('/admin/login', request.url))
   }
 
-  // Security Headers
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: https://images.unsplash.com;
-    connect-src 'self' https://*.supabase.co;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
-  `.replace(/\s{2,}/g, ' ').trim();
-
-  response.headers.set('Content-Security-Policy', cspHeader);
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=()');
+  // Catatan: Header keamanan di-set via next.config.ts untuk menghindari duplikasi
+  // yang bisa menyebabkan bug atau parsing yang lambat oleh browser.
 
   return response;
 }

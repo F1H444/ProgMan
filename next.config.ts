@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
         script-src 'self' 'unsafe-eval' 'unsafe-inline';
         style-src 'self' 'unsafe-inline';
         img-src 'self' blob: data: https:;
-        font-src 'self';
+        font-src 'self' data:;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
@@ -51,6 +51,14 @@ const nextConfig: NextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
           },
         ],
       },

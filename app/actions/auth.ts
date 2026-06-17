@@ -43,7 +43,7 @@ export async function loginAdmin(email: string, password: string) {
         cookieStore.set('admin_session', sessionToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
+          sameSite: 'strict',
           maxAge: 60 * 60 * 24, // 1 hari
           path: '/'
         });
@@ -66,7 +66,7 @@ export async function loginAdmin(email: string, password: string) {
     cookieStore.set('admin_session', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: 60 * 60 * 24, // 1 hari
       path: '/'
     });
