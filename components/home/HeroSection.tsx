@@ -57,7 +57,7 @@ export function HeroSection() {
           transition={{ duration: 1, ease: "easeOut", delay: 0.6 }}
           className="text-lg md:text-xl text-zinc-400 font-light max-w-2xl leading-relaxed mb-10"
         >
-          Kami bantu desain, koding, sampai rilis aplikasimu. Tinggal duduk manis, biar tim GhostDev yang urus semua urusan teknisnya.
+          Kami bantu desain, koding, sampai rilis aplikasimu. Tinggal duduk manis, biar tim ProgMan yang urus semua urusan teknisnya.
         </motion.p>
 
         {/* CTA Button */}

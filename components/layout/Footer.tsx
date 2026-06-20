@@ -11,7 +11,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="md:col-span-2">
-            <h2 className="text-2xl font-bold text-white tracking-tighter mb-8">GHOSTDEV</h2>
+            <h2 className="text-2xl font-bold text-white tracking-tighter mb-8">PROGMAN</h2>
             <p className="text-zinc-500 text-sm max-w-xs leading-relaxed">
               Membangun masa depan digital dengan presisi artistik dan keunggulan teknis. Kami adalah mitra rahasia di balik kesuksesan brand elit.
             </p>
@@ -31,7 +31,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest">
-            &copy; {currentYear} GhostDev. Hak Cipta Dilindungi.
+            &copy; {currentYear} ProgMan. Hak Cipta Dilindungi.
           </p>
           <div className="flex items-center gap-2">
             <span className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest">Dibuat Dengan</span>
@@ -44,7 +44,7 @@ export function Footer() {
       {/* Massive Brand Watermark */}
       <div className="mt-8 overflow-hidden pointer-events-none select-none opacity-[0.02] flex justify-center">
         <h2 className="text-[15vw] font-black leading-none tracking-tighter text-white whitespace-nowrap">
-          GHOSTDEV
+          PROGMAN
         </h2>
       </div>
     </footer>

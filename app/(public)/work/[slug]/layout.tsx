@@ -12,15 +12,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await fetchProjectBySlug(slug);
 
   if (!project) {
-    return { title: 'Proyek Tidak Ditemukan | GhostDev' };
+    return { title: 'Proyek Tidak Ditemukan | ProgMan' };
   }
 
   return {
-    title: `${project.title} | GhostDev`,
+    title: `${project.title} | ProgMan`,
     description: `Studi Kasus: ${project.title} - Kategori: ${project.category}. Solusi cerdas untuk bisnis digitalmu.`,
     openGraph: {
       title: project.title,
-      description: `Lihat hasil proyek ${project.title} di GhostDev.`,
+      description: `Lihat hasil proyek ${project.title} di ProgMan.`,
       images: [project.image],
     },
   };

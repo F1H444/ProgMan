@@ -55,7 +55,7 @@ export function Navbar() {
             onClick={() => setIsOpen(false)}
             className="text-lg md:text-xl font-bold tracking-tighter hover:opacity-80 transition-opacity"
           >
-            GHOSTDEV
+            PROGMAN
           </Link>
           
           {/* Desktop Menu */}

@@ -32,9 +32,9 @@ export async function loginAdmin(email: string, password: string) {
     }
 
     // Fallback: Jika tabel belum ada atau user tidak ditemukan di DB,
-    // cek menggunakan environment variables (atau default admin@ghostdev.id / admin123)
+    // cek menggunakan environment variables (atau default admin@progman.id / admin123)
     if (!tableExists || !user) {
-      const defaultEmail = process.env.ADMIN_EMAIL || 'admin@ghostdev.id';
+      const defaultEmail = process.env.ADMIN_EMAIL || 'admin@progman.id';
       const defaultPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
       if (email === defaultEmail && password === defaultPassword) {

@@ -1,4 +1,4 @@
-# GhostDev | Joki
+# ProgMan | Joki
 
 <img width="1919" height="984" alt="image" src="https://github.com/user-attachments/assets/0ce371d8-75d6-476c-8926-2345c40f8224" />
 
@@ -6,7 +6,7 @@
 
 > **"Merancang sebuah website untuk joki ukk."**
 
-GhostDev adalah sebuah website joki ukk yang cepat dan terpecaya
+ProgMan adalah sebuah website joki ukk yang cepat dan terpecaya
 
 ## Fitur Utama
 
@@ -45,8 +45,8 @@ Pastikan Anda telah menginstal [Node.js](https://nodejs.org/) (versi 18+ direkom
 1.  **Clone repository:**
 
     ```bash
-    git clone https://github.com/username/ghostdev.git
-    cd ghostdev
+    git clone https://github.com/username/progman.git
+    cd progman
     ```
 
 2.  **Install dependencies:**
@@ -83,7 +83,7 @@ Pastikan Anda telah menginstal [Node.js](https://nodejs.org/) (versi 18+ direkom
 Berikut adalah gambaran singkat struktur folder utama:
 
 ```
-ghostdev/
+progman/
 ├── app/                  # App Router: Halaman dan layout
 │   ├── (public)/         # Halaman publik (Home, About, dll)
 │   ├── admin/            # Halaman admin dashboard

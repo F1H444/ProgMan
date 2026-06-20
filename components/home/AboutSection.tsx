@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { useRef } from 'react';
 
-const text = "Gak usah pusing mikirin koding atau error. Kamu punya ide? Sini kita yang bikinin aplikasinya sampai beres. Kamu tinggal fokus ngurusin bisnis, urusan teknis serahin ke GhostDev.";
+const text = "Gak usah pusing mikirin koding atau error. Kamu punya ide? Sini kita yang bikinin aplikasinya sampai beres. Kamu tinggal fokus ngurusin bisnis, urusan teknis serahin ke ProgMan.";
 const words = text.split(" ");
 
 function Word({ word, range, progress }: { word: string; range: [number, number]; progress: MotionValue<number> }) {

@@ -97,7 +97,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.3)]">
               <span className="text-white font-black text-lg">G</span>
             </div>
-            <span className="text-white font-bold text-lg tracking-tight">GhostDev</span>
+            <span className="text-white font-bold text-lg tracking-tight">ProgMan</span>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}

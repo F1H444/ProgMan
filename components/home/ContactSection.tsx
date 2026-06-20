@@ -78,7 +78,7 @@ export function ContactSection() {
             >
               <Magnetic strength={0.1}>
                 <a 
-                  href="mailto:admin@ghostdev.co" 
+                  href="mailto:admin@progman.co" 
                   className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
                 >
                   <div className="flex items-center gap-6 mb-6 sm:mb-0">
@@ -87,7 +87,7 @@ export function ContactSection() {
                      </div>
                      <div>
                        <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest mb-2">Email</p>
-                       <p className="text-white font-medium text-xl md:text-2xl tracking-tight">admin@ghostdev.co</p>
+                       <p className="text-white font-medium text-xl md:text-2xl tracking-tight">admin@progman.co</p>
                      </div>
                   </div>
                   <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 sm:self-center self-end">
@@ -103,7 +103,7 @@ export function ContactSection() {
         {/* Footer info */}
         <div className="mt-32 pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
            <div className="text-zinc-500 text-sm font-light">
-              &copy; {new Date().getFullYear()} GhostDev. All rights reserved.
+              &copy; {new Date().getFullYear()} ProgMan. All rights reserved.
            </div>
            
            <div className="flex gap-8 text-zinc-600 font-mono text-[10px] uppercase tracking-widest">

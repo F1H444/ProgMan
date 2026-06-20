@@ -6,7 +6,7 @@ import { useLoading } from '@/components/providers/LoadingProvider';
 
 // Variabel statis dipindah ke luar agar tidak menyebabkan re-render error di React Fast Refresh
 const ANIM_DURATION = 1.4; // Detik (durasi efek naiknya layar hitam)
-const HOLD_TIME = 2000;    // Milidetik (waktu tunggu melihat tulisan GHOSTDEV sebelum meluncur)
+const HOLD_TIME = 2000;    // Milidetik (waktu tunggu melihat tulisan PROGMAN sebelum meluncur)
 
 export function Preloader() {
   const [isVisible, setIsVisible] = useState(true);
@@ -43,7 +43,7 @@ export function Preloader() {
     }
   };
 
-  const textArray = "ghostdev".split("");
+  const textArray = "ProgMan".split("");
 
   // Jalur SVG untuk animasi jelly curve di bawah layar
   const curvePath = {

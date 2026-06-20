@@ -14,20 +14,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GhostDev | Web & App Development",
+  title: "ProgMan | Web & App Development",
   description: "Kami merancang pengalaman digital yang menghantui kompetisi. Pengembangan web premium dan layanan aplikasi elit.",
-  keywords: ["pengembangan web", "pembuatan aplikasi", "agensi kreatif", "ghostdev", "desain responsif", "dark mode"],
+  keywords: ["pengembangan web", "pembuatan aplikasi", "agensi kreatif", "progman", "desain responsif", "dark mode"],
   openGraph: {
     type: "website",
     locale: "id_ID",
-    url: "https://ghostdev.agency",
-    title: "GhostDev | Kerajinan Digital Elit",
+    url: "https://progman.agency",
+    title: "ProgMan | Kerajinan Digital Elit",
     description: "Membangun pengalaman digital yang cepat, aman, dan memukau.",
-    siteName: "GhostDev",
+    siteName: "ProgMan",
   },
   twitter: {
     card: "summary_large_image",
-    title: "GhostDev | Web & App Development",
+    title: "ProgMan | Web & App Development",
     description: "Kami merancang pengalaman digital yang luar biasa.",
   },
 };
@@ -44,9 +44,9 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "name": "GhostDev",
-    "image": "https://ghostdev.agency/logo.png",
-    "url": "https://ghostdev.agency",
+    "name": "ProgMan",
+    "image": "https://progman.agency/logo.png",
+    "url": "https://progman.agency",
     "telephone": "+62123456789",
     "priceRange": "$$$",
     "address": {
