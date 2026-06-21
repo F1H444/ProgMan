@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Magnetic } from '@/components/ui/Magnetic';
+import { useLenis } from 'lenis/react';
 
 const navItems = [
   { name: 'Tentang', href: '/#about' }, 
@@ -17,6 +18,7 @@ const navItems = [
 export function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const lenis = useLenis();
 
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
@@ -36,7 +38,11 @@ export function Navbar() {
     
     if (elem && pathname === '/') {
       e.preventDefault();
-      elem.scrollIntoView({ behavior: 'smooth' });
+      if (lenis) {
+        lenis.scrollTo(elem, { duration: 2 });
+      } else {
+        elem.scrollIntoView({ behavior: 'smooth' });
+      }
     }
     setIsOpen(false); // Close mobile menu on navigation
   };
