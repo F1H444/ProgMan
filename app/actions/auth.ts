@@ -1,29 +1,33 @@
 'use server';
 
 import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { comparePassword, signJWT, verifyJWT } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { headers } from 'next/headers';
 import { rateLimit } from '@/lib/rate-limit';
 
+// Gunakan admin client jika tersedia (untuk production), fallback ke anon client
+const db = supabaseAdmin || supabase;
+
 
 export async function loginAdmin(email: string, password: string) {
   try {
-    // Rate limiting check for brute force protection
-    const headersList = await headers();
-    const ip = headersList.get('x-forwarded-for') ?? headersList.get('x-real-ip') ?? 'unknown-ip';
-    
-    // Check rate limit for login attempts (5 attempts per 15 minutes)
-    const loginRateLimit = rateLimit(`${ip}-login`, { limit: 5, windowMs: 15 * 60 * 1000 });
-    if (!loginRateLimit.success) {
-      return { error: 'Terlalu banyak percobaan login. Silakan coba lagi nanti.' };
+    // Rate limiting hanya berjalan di development (serverless tidak persist)
+    if (process.env.NODE_ENV !== 'production') {
+      const headersList = await headers();
+      const ip = headersList.get('x-forwarded-for') ?? headersList.get('x-real-ip') ?? 'unknown-ip';
+      const loginRateLimit = rateLimit(`${ip}-login`, { limit: 5, windowMs: 15 * 60 * 1000 });
+      if (!loginRateLimit.success) {
+        return { error: 'Terlalu banyak percobaan login. Silakan coba lagi nanti.' };
+      }
     }
 
     let user = null;
     let tableExists = true;
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('admin_users')
         .select('*')
         .eq('email', email)
