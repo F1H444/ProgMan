@@ -48,25 +48,25 @@ export function ContactSection() {
               transition={{ duration: 0.8, delay: 0.2 }}
             >
               <Magnetic strength={0.1}>
-                <a 
-                  href="https://wa.me/6281216802722" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
-                >
-                  <div className="flex items-center gap-6 mb-6 sm:mb-0">
-                     <div className="w-16 h-16 rounded-full bg-white/[0.05] group-hover:bg-green-500/10 flex items-center justify-center text-white group-hover:text-green-500 transition-colors duration-500">
-                       <Phone size={24} strokeWidth={1.5} />
-                     </div>
-                     <div>
-                       <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest mb-2">WhatsApp</p>
-                       <p className="text-white font-medium text-xl md:text-2xl tracking-tight">0812-1680-2722</p>
-                     </div>
-                  </div>
-                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 sm:self-center self-end">
-                    <ArrowUpRight size={20} className="transition-transform duration-500 group-hover:rotate-45" />
-                  </div>
-                </a>
+<a 
+                   href="https://wa.me/6281216802722" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="group flex flex-row items-center justify-between p-6 sm:p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
+                 >
+                   <div className="flex items-center gap-4 sm:gap-6">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/[0.05] group-hover:bg-green-500/10 flex items-center justify-center text-white group-hover:text-green-500 transition-colors duration-500">
+                        <Phone size={20} strokeWidth={1.5} className="sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <p className="text-zinc-500 text-[10px] sm:text-xs font-mono uppercase tracking-widest mb-1 sm:mb-2">WhatsApp</p>
+                        <p className="text-white font-medium text-lg sm:text-xl md:text-2xl tracking-tight">0812-1680-2722</p>
+                      </div>
+                   </div>
+                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 ml-4">
+                     <ArrowUpRight size={18} className="transition-transform duration-500 group-hover:rotate-45" />
+                   </div>
+                 </a>
               </Magnetic>
             </motion.div>
 
@@ -77,23 +77,23 @@ export function ContactSection() {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <Magnetic strength={0.1}>
-                <a 
-                  href="mailto:admin@progman.co" 
-                  className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
-                >
-                  <div className="flex items-center gap-6 mb-6 sm:mb-0">
-                     <div className="w-16 h-16 rounded-full bg-white/[0.05] group-hover:bg-blue-500/10 flex items-center justify-center text-white group-hover:text-blue-500 transition-colors duration-500">
-                       <Mail size={24} strokeWidth={1.5} />
-                     </div>
-                     <div>
-                       <p className="text-zinc-500 text-xs font-mono uppercase tracking-widest mb-2">Email</p>
-                       <p className="text-white font-medium text-xl md:text-2xl tracking-tight">admin@progman.co</p>
-                     </div>
-                  </div>
-                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 sm:self-center self-end">
-                    <ArrowUpRight size={20} className="transition-transform duration-500 group-hover:rotate-45" />
-                  </div>
-                </a>
+<a 
+                   href="mailto:admin@progman.co" 
+                   className="group flex flex-row items-center justify-between p-6 sm:p-10 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.06] hover:border-white/10 transition-all duration-500 shadow-2xl hover:shadow-[0_0_40px_-15px_rgba(255,255,255,0.05)]"
+                 >
+                   <div className="flex items-center gap-4 sm:gap-6">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/[0.05] group-hover:bg-blue-500/10 flex items-center justify-center text-white group-hover:text-blue-500 transition-colors duration-500">
+                        <Mail size={20} strokeWidth={1.5} className="sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <p className="text-zinc-500 text-[10px] sm:text-xs font-mono uppercase tracking-widest mb-1 sm:mb-2">Email</p>
+                        <p className="text-white font-medium text-lg sm:text-xl md:text-2xl tracking-tight">admin@progman.co</p>
+                      </div>
+                   </div>
+                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500 ml-4">
+                     <ArrowUpRight size={18} className="transition-transform duration-500 group-hover:rotate-45" />
+                   </div>
+                 </a>
               </Magnetic>
             </motion.div>
           </div>

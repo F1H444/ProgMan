@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@progman.id"
+                placeholder="Masukkan email"
                 required
                 className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all"
               />
@@ -119,17 +119,17 @@ export default function AdminLoginPage() {
             disabled={loading}
             whileHover={{ scale: loading ? 1 : 1.02 }}
             whileTap={{ scale: loading ? 1 : 0.98 }}
-            className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                <span>Memproses...</span>
-              </>
-            ) : (
-              "Masuk"
-            )}
-          </motion.button>
+className="w-full py-3.5 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 text-sm sm:text-base"
+           >
+             {loading ? (
+               <>
+                 <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                 <span>Memproses...</span>
+               </>
+             ) : (
+               "Masuk"
+             )}
+           </motion.button>
         </form>
       </motion.div>
     </div>

@@ -3,10 +3,22 @@
 import { supabase } from '@/lib/supabase';
 import { comparePassword, signJWT, verifyJWT } from '@/lib/auth';
 import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
+import { rateLimit } from '@/lib/rate-limit';
 
 
 export async function loginAdmin(email: string, password: string) {
   try {
+    // Rate limiting check for brute force protection
+    const headersList = await headers();
+    const ip = headersList.get('x-forwarded-for') ?? headersList.get('x-real-ip') ?? 'unknown-ip';
+    
+    // Check rate limit for login attempts (5 attempts per 15 minutes)
+    const loginRateLimit = rateLimit(`${ip}-login`, { limit: 5, windowMs: 15 * 60 * 1000 });
+    if (!loginRateLimit.success) {
+      return { error: 'Terlalu banyak percobaan login. Silakan coba lagi nanti.' };
+    }
+
     let user = null;
     let tableExists = true;
 
@@ -32,9 +44,9 @@ export async function loginAdmin(email: string, password: string) {
     }
 
     // Fallback: Jika tabel belum ada atau user tidak ditemukan di DB,
-    // cek menggunakan environment variables (atau default admin@progman.id / admin123)
+    // cek menggunakan environment variables
     if (!tableExists || !user) {
-      const defaultEmail = process.env.ADMIN_EMAIL || 'admin@progman.id';
+      const defaultEmail = process.env.ADMIN_EMAIL || 'admin@ghostdev.id';
       const defaultPassword = process.env.ADMIN_PASSWORD || 'admin123';
 
       if (email === defaultEmail && password === defaultPassword) {

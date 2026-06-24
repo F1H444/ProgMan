@@ -10,8 +10,11 @@ import { Magnetic } from '@/components/ui/Magnetic';
 import { useLenis } from 'lenis/react';
 
 const navItems = [
+  { name: 'Layanan', href: '/#services' },
   { name: 'Tentang', href: '/#about' }, 
+  { name: 'Teknologi', href: '/#tech-stack' },
   { name: 'Project', href: '/#work' },    
+  { name: 'Testimoni', href: '/#testimonials' },
   { name: 'Kontak', href: '/#contact' }, 
 ];
 
