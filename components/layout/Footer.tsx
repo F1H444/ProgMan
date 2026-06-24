@@ -13,7 +13,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <h2 className="text-2xl font-bold text-white tracking-tighter mb-8">PROGMAN</h2>
             <p className="text-zinc-500 text-sm max-w-xs leading-relaxed">
-              Membangun masa depan digital dengan presisi artistik dan keunggulan teknis. Kami adalah mitra rahasia di balik kesuksesan brand elit.
+              Kami membantu brand dan bisnis membangun kehadiran digital yang kuat dengan solusi web dan aplikasi berkualitas.
             </p>
           </div>
 
