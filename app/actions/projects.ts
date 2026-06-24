@@ -1,7 +1,11 @@
 'use server'
 
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { supabase } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
+
+// Use admin client for server-side operations, fallback to anon
+const dbClient = supabaseAdmin || supabase;
 
 export interface Project {
   id: number | string;
@@ -20,15 +24,20 @@ export interface Project {
 // 1. Fetch all projects
 export async function getProjectsAction(): Promise<Project[]> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await dbClient
       .from('projects')
       .select('*')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
+    if (!data || data.length === 0) {
+      console.log('No projects found in database');
+      return [];
+    }
+    console.log('Fetched projects:', data.length);
     return (data || []) as Project[];
-  } catch (error) {
-    console.error('Error fetching projects:', error);
+  } catch (error: any) {
+    console.error('Error fetching projects:', error.message);
     return [];
   }
 }
@@ -36,7 +45,7 @@ export async function getProjectsAction(): Promise<Project[]> {
 // 2. Fetch single project by ID
 export async function getProjectByIdAction(id: string | number): Promise<Project | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await dbClient
       .from('projects')
       .select('*')
       .eq('id', id)
@@ -45,8 +54,8 @@ export async function getProjectByIdAction(id: string | number): Promise<Project
 
     if (error) throw error;
     return data as Project;
-  } catch (error) {
-    console.error('Error fetching project by ID:', error);
+  } catch (error: any) {
+    console.error('Error fetching project by ID:', error.message);
     return null;
   }
 }
@@ -54,7 +63,7 @@ export async function getProjectByIdAction(id: string | number): Promise<Project
 // 3. Create project
 export async function createProjectAction(project: Omit<Project, 'id' | 'created_at' | 'updated_at'>): Promise<Project | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await dbClient
       .from('projects')
       .insert({
         slug: project.slug,
@@ -74,8 +83,8 @@ export async function createProjectAction(project: Omit<Project, 'id' | 'created
     revalidatePath('/work');
     revalidatePath('/');
     return data as Project;
-  } catch (error) {
-    console.error('Error creating project:', error);
+  } catch (error: any) {
+    console.error('Error creating project:', error.message);
     return null;
   }
 }
@@ -83,7 +92,7 @@ export async function createProjectAction(project: Omit<Project, 'id' | 'created
 // 4. Update project
 export async function updateProjectAction(id: string | number, project: Partial<Omit<Project, 'id' | 'created_at' | 'updated_at'>>): Promise<Project | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await dbClient
       .from('projects')
       .update({
         slug: project.slug,
@@ -106,8 +115,8 @@ export async function updateProjectAction(id: string | number, project: Partial<
     revalidatePath(`/work/${project.slug}`);
     revalidatePath('/');
     return data as Project;
-  } catch (error) {
-    console.error('Error updating project:', error);
+  } catch (error: any) {
+    console.error('Error updating project:', error.message);
     return null;
   }
 }
@@ -115,7 +124,7 @@ export async function updateProjectAction(id: string | number, project: Partial<
 // 5. Delete project
 export async function deleteProjectAction(id: string | number): Promise<boolean> {
   try {
-    const { error } = await supabase
+    const { error } = await dbClient
       .from('projects')
       .delete()
       .eq('id', id);
@@ -125,8 +134,8 @@ export async function deleteProjectAction(id: string | number): Promise<boolean>
     revalidatePath('/work');
     revalidatePath('/');
     return true;
-  } catch (error) {
-    console.error('Error deleting project:', error);
+  } catch (error: any) {
+    console.error('Error deleting project:', error.message);
     return false;
   }
 }
@@ -137,38 +146,19 @@ export async function uploadProjectImageAction(file: File, folder: string = 'her
     // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    
-    const supabaseAdmin = (await import('@/lib/supabase-admin')).supabaseAdmin;
-    
+
+    if (!supabaseAdmin) {
+      console.warn('SUPABASE_SERVICE_ROLE_KEY not set, upload may fail in production');
+    }
+
     // Upload to Supabase Storage
     const fileExt = file.name.split('.').pop() || 'png';
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${sanitizedName}.${fileExt}`;
     const filePath = `${folder}/${fileName}`;
 
-    if (!supabaseAdmin) {
-      // Fallback: upload to public folder (only works in local/dev)
-      console.warn('SUPABASE_SERVICE_ROLE_KEY not set, using local storage (not compatible with production)');
-      
-      // Try local upload only in non-production
-      if (process.env.NODE_ENV !== 'production') {
-        try {
-          const { mkdir, writeFile } = await import('fs/promises');
-          const { join } = await import('path');
-          const publicPath = join(process.cwd(), 'public', 'uploads', folder);
-          await mkdir(publicPath, { recursive: true });
-          const localFilePath = join(publicPath, fileName);
-          await writeFile(localFilePath, buffer);
-          return { url: `/uploads/${folder}/${fileName}`, error: null };
-        } catch (fsError: any) {
-          console.error('Local upload failed:', fsError);
-        }
-      }
-      
-      return { url: null, error: 'Storage configuration required for production. Set SUPABASE_SERVICE_ROLE_KEY.' };
-    }
-
-    const { data, error } = await supabaseAdmin.storage
+    const storageClient = supabaseAdmin || supabase;
+    const { data, error } = await storageClient.storage
       .from('project-images')
       .upload(filePath, buffer, {
         contentType: file.type || 'image/png',
@@ -178,7 +168,7 @@ export async function uploadProjectImageAction(file: File, folder: string = 'her
     if (error) throw error;
 
     // Get public URL
-    const { data: publicUrlData } = supabaseAdmin.storage
+    const { data: publicUrlData } = storageClient.storage
       .from('project-images')
       .getPublicUrl(filePath);
 
