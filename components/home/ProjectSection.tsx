@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { fetchProjects, projects as staticProjects, Project } from '@/lib/projects';
+import { getProjectsAction, Project } from '@/app/actions/projects';
 import { cn } from '@/lib/utils';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 
@@ -75,13 +75,15 @@ function EditorialProjectCard({ project, index }: { project: Project; index: num
 }
 
 export function ProjectSection() {
-  const [projects, setProjects] = useState<Project[]>(staticProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const loadProjects = async () => {
-      const data = await fetchProjects();
+      const data = await getProjectsAction();
       setProjects(data);
+      setIsLoading(false);
     };
     loadProjects();
   }, []);
@@ -109,11 +111,35 @@ export function ProjectSection() {
         </motion.div>
 
         {/* Cinematic Projects List */}
-        <div className="flex flex-col">
-          {(isExpanded ? projects : projects.slice(0, 4)).map((project, i) => (
-            <EditorialProjectCard key={project.id} project={project} index={i} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex flex-col gap-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 mb-32 md:mb-48">
+                  <div className="w-full lg:w-3/5 h-64 bg-white/5 rounded-3xl" />
+                  <div className="w-full lg:w-2/5 flex flex-col justify-center">
+                    <div className="h-4 bg-white/5 rounded mb-4 w-32" />
+                    <div className="h-8 bg-white/5 rounded mb-6" />
+                    <div className="h-6 bg-white/5 rounded mb-4" />
+                    <div className="h-10 bg-white/5 rounded w-40" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            {(isExpanded ? projects : projects.slice(0, 4)).map((project, i) => (
+              <EditorialProjectCard key={project.id} project={project} index={i} />
+            ))}
+          </div>
+        )}
+        
+        {!isLoading && projects.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-zinc-500 text-lg">Belum ada proyek yang ditambahkan.</p>
+          </div>
+        )}
 
         {/* Show More Button */}
         {!isExpanded && projects.length > 4 && (
