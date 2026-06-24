@@ -2,8 +2,6 @@
 
 import { supabase } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
 
 export interface Project {
   id: number | string;
@@ -133,28 +131,58 @@ export async function deleteProjectAction(id: string | number): Promise<boolean>
   }
 }
 
-// 6. Upload image action (saves locally to public/uploads)
+// 6. Upload image action (saves to Supabase Storage)
 export async function uploadProjectImageAction(file: File, folder: string = 'hero'): Promise<{ url: string | null; error: string | null }> {
   try {
+    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    // Sanitize filename
+    
+    const supabaseAdmin = (await import('@/lib/supabase-admin')).supabaseAdmin;
+    
+    // Upload to Supabase Storage
     const fileExt = file.name.split('.').pop() || 'png';
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}-${sanitizedName}.${fileExt}`;
+    const filePath = `${folder}/${fileName}`;
 
-    // Target path in public directory: public/uploads/hero or public/uploads/gallery
-    const publicPath = join(process.cwd(), 'public', 'uploads', folder);
-    
-    // Ensure directory exists
-    await mkdir(publicPath, { recursive: true });
+    if (!supabaseAdmin) {
+      // Fallback: upload to public folder (only works in local/dev)
+      console.warn('SUPABASE_SERVICE_ROLE_KEY not set, using local storage (not compatible with production)');
+      
+      // Try local upload only in non-production
+      if (process.env.NODE_ENV !== 'production') {
+        try {
+          const { mkdir, writeFile } = await import('fs/promises');
+          const { join } = await import('path');
+          const publicPath = join(process.cwd(), 'public', 'uploads', folder);
+          await mkdir(publicPath, { recursive: true });
+          const localFilePath = join(publicPath, fileName);
+          await writeFile(localFilePath, buffer);
+          return { url: `/uploads/${folder}/${fileName}`, error: null };
+        } catch (fsError: any) {
+          console.error('Local upload failed:', fsError);
+        }
+      }
+      
+      return { url: null, error: 'Storage configuration required for production. Set SUPABASE_SERVICE_ROLE_KEY.' };
+    }
 
-    const filePath = join(publicPath, fileName);
-    await writeFile(filePath, buffer);
+    const { data, error } = await supabaseAdmin.storage
+      .from('project-images')
+      .upload(filePath, buffer, {
+        contentType: file.type || 'image/png',
+        cacheControl: '3600',
+      });
 
-    const relativeUrl = `/uploads/${folder}/${fileName}`;
-    return { url: relativeUrl, error: null };
+    if (error) throw error;
+
+    // Get public URL
+    const { data: publicUrlData } = supabaseAdmin.storage
+      .from('project-images')
+      .getPublicUrl(filePath);
+
+    return { url: publicUrlData?.publicUrl || null, error: null };
   } catch (error: any) {
     console.error('Upload error:', error);
     return { url: null, error: error.message || 'Gagal mengupload gambar' };
