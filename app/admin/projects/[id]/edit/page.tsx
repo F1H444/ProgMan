@@ -18,7 +18,7 @@ export default function EditProjectPage() {
     category: 'Pemrograman Web',
     tech: [] as string[],
     image: '',
-    long_images: [] as string[],
+    longImages: [] as string[],
     description: '',
   });
   const [newTech, setNewTech] = useState('');
@@ -41,7 +41,7 @@ export default function EditProjectPage() {
         category: data.category,
         tech: data.tech || [],
         image: data.image,
-        long_images: data.long_images || [],
+        longImages: data.longImages || [],
         description: data.description || '',
       });
       setLoading(false);
@@ -84,7 +84,7 @@ export default function EditProjectPage() {
     setUploadingGallery(true);
     const { url, error } = await uploadProjectImageAction(file, 'gallery');
     if (url) {
-      setFormData({ ...formData, long_images: [...formData.long_images, url] });
+      setFormData({ ...formData, longImages: [...formData.longImages, url] });
     } else {
       alert(`Gagal upload gambar: ${error}`);
     }
@@ -94,7 +94,7 @@ export default function EditProjectPage() {
   const removeGalleryImage = (index: number) => {
     setFormData({
       ...formData,
-      long_images: formData.long_images.filter((_, i) => i !== index),
+      longImages: formData.longImages.filter((_, i) => i !== index),
     });
   };
 
@@ -109,7 +109,7 @@ export default function EditProjectPage() {
     setSaving(true);
     const project = await updateProjectAction(id as string, {
       ...formData,
-      long_images: formData.long_images.length > 0 ? formData.long_images : null,
+      longImages: formData.longImages.length > 0 ? formData.longImages : null,
       description: formData.description || null,
     });
 
@@ -304,18 +304,18 @@ export default function EditProjectPage() {
             Gallery Images (Long Screenshots)
           </label>
           <div className="grid grid-cols-3 gap-3">
-            {formData.long_images.map((img, index) => (
-              <div key={index} className="relative rounded-xl overflow-hidden aspect-[3/4]">
-                <img src={img} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeGalleryImage(index)}
-                  className="absolute top-2 right-2 p-1.5 bg-black/50 rounded-lg text-white hover:bg-black/70 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
+{formData.longImages.map((img, index) => (
+               <div key={index} className="relative rounded-xl overflow-hidden aspect-[3/4]">
+                 <img src={img} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                 <button
+                   type="button"
+                   onClick={() => removeGalleryImage(index)}
+                   className="absolute top-2 right-2 p-1.5 bg-black/50 rounded-lg text-white hover:bg-black/70 transition-colors"
+                 >
+                   <X className="w-3 h-3" />
+                 </button>
+               </div>
+             ))}
             <label className="flex flex-col items-center justify-center aspect-[3/4] border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-white/30 transition-colors">
               {uploadingGallery ? (
                 <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />

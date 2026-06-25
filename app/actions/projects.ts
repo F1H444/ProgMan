@@ -14,7 +14,7 @@ export interface Project {
   category: string;
   tech: string[];
   image: string;
-  long_images?: string[] | null;
+  longImages?: string[] | null;
   description?: string | null;
   size?: string | null;
   created_at?: string;
@@ -35,7 +35,19 @@ export async function getProjectsAction(): Promise<Project[]> {
       return [];
     }
     console.log('Fetched projects:', data.length);
-    return (data || []) as Project[];
+    return data.map((p: any) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      category: p.category,
+      tech: p.tech || [],
+      image: p.image,
+      longImages: p.long_images || null,
+      description: p.description || null,
+      size: p.size || 'small',
+      created_at: p.created_at,
+      updated_at: p.updated_at,
+    }));
   } catch (error: any) {
     console.error('Error fetching projects:', error.message);
     return [];
@@ -53,7 +65,19 @@ export async function getProjectByIdAction(id: string | number): Promise<Project
       .single();
 
     if (error) throw error;
-    return data as Project;
+    return {
+      id: data.id,
+      slug: data.slug,
+      title: data.title,
+      category: data.category,
+      tech: data.tech || [],
+      image: data.image,
+      longImages: data.long_images || null,
+      description: data.description || null,
+      size: data.size || 'small',
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    };
   } catch (error: any) {
     console.error('Error fetching project by ID:', error.message);
     return null;
@@ -71,7 +95,7 @@ export async function createProjectAction(project: Omit<Project, 'id' | 'created
         category: project.category,
         tech: project.tech,
         image: project.image,
-        long_images: project.long_images || null,
+        long_images: project.longImages || null,
         description: project.description || null,
         size: project.size || 'small',
       })
@@ -82,7 +106,19 @@ export async function createProjectAction(project: Omit<Project, 'id' | 'created
 
     revalidatePath('/work');
     revalidatePath('/');
-    return data as Project;
+    return {
+      id: data.id,
+      slug: data.slug,
+      title: data.title,
+      category: data.category,
+      tech: data.tech || [],
+      image: data.image,
+      longImages: data.long_images || null,
+      description: data.description || null,
+      size: data.size || 'small',
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    };
   } catch (error: any) {
     console.error('Error creating project:', error.message);
     return null;
@@ -100,7 +136,7 @@ export async function updateProjectAction(id: string | number, project: Partial<
         category: project.category,
         tech: project.tech,
         image: project.image,
-        long_images: project.long_images || null,
+        long_images: project.longImages || null,
         description: project.description || null,
         size: project.size || 'small',
         updated_at: new Date().toISOString(),
@@ -114,7 +150,19 @@ export async function updateProjectAction(id: string | number, project: Partial<
     revalidatePath('/work');
     revalidatePath(`/work/${project.slug}`);
     revalidatePath('/');
-    return data as Project;
+    return {
+      id: data.id,
+      slug: data.slug,
+      title: data.title,
+      category: data.category,
+      tech: data.tech || [],
+      image: data.image,
+      longImages: data.long_images || null,
+      description: data.description || null,
+      size: data.size || 'small',
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    };
   } catch (error: any) {
     console.error('Error updating project:', error.message);
     return null;
